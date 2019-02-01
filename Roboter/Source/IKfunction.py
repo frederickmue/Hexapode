@@ -1,6 +1,9 @@
 # coding: utf-8
-#Thassilo Bücker, Alexander Orzol, Frederick Mueller, Moritz Kolb
+#Thassilo Bücker, Alexander Orzol, Frederick Müller, Moritz Kolb
 #Campus Velbert/Heiligenhaus, Hochschule Bochum, 2016/2017
+#
+#Überarbeitet von Frederick Müller 
+#Campus Velbert/Heiligenhaus, Hochschule Bochum, 2018/2019
 
 # Dieses Programm enthaelt alle erweiterten Bewegungsfunktionen.
 # Hier befinden sich alle Betriebsarten, welche auf die Basisfunktionen der IK.py zugreifen.
@@ -22,10 +25,10 @@ def newAutomatikbetrieb() :
 	k=0
 	while(getStatus()  != "1"):
 		MotorsReady = 0
-		currentPositions = readAllPositions()
+		currentPositions = readAllPositions();
 		k += 1
-		print (currentPositions)
-		print (PositionToReach)
+		print currentPositions
+		print PositionToReach
 		for i in xrange(0,18):
 			if abs(PositionToReach[i] - currentPositions[i]) < 5 or currentPositions[i] == 1:
 				MotorsReady += 1
@@ -36,7 +39,7 @@ def newAutomatikbetrieb() :
 			Gait(phi=0)
 			MoveIK(x,y,z,rotx,roty,rotz)
 			PositionToReach = getLastAngles()
-			print (k)
+			print k
 			k = 0
 		sleep(0.01)
 		j += 1
@@ -46,31 +49,31 @@ def Fernbedienungsbetrieb():
 	#Entspricht dem Handbetrieb ueber Konsole, jedoch mit geringerem
 	#Funktionsumfang und Ansteuerung ueber die Fernbedienung.
 	global x,y,z,rotx,roty,rotz,GaitPosX,GaitPosY,GaitPosZ
-	freeToMove = 0
+	freeToMove = 0;
 	oldCommand = 'N'
-	stamp=time.time()
-	while True:
-		stamp2 = time.time()
-		if stamp2 - stamp*1000  >= 50:
+	stamp=time.time();
+	while(True):
+		stamp2 = time.time();
+		if (stamp2 - stamp)*1000  >= 50:
 			#stamp5 = time.time()
-			stamp = time.time()
+			stamp = time.time();
 			#print "attempting to read"
-			command = getStatus()
-			if command == ' ':
-				command = oldCommand
+			command = getStatus();
+			if(command == ' '):
+				command = oldCommand;  
 			oldCommand = command
-			freeToMove = 1
+			freeToMove = 1;
 			#print str((time.time()-stamp)*1000)
 		else:
 			
-			if freeToMove == 1 :
+			if(freeToMove == 1 ):
 				stamp3 = 0
-				freeToMove = 0
-				if command == "W" :#and servos.getMovingStatus(4) == 0):
+				freeToMove = 0;
+				if(command == "W" ):#and servos.getMovingStatus(4) == 0):
 					#stamp3 = time.time()
 					Gait(phi=0)
 					MoveIK(x,y,z,rotx,roty,rotz)
-					print ("bewegung nach vorne")
+					print "bewegung nach vorne"
 					#sleep(1) #Beaglebone ist mit print alleine Abgestuerzt
 				
 				if(command == "S" ):#and servos.getMovingStatus(4) == 0):
@@ -85,9 +88,9 @@ def Fernbedienungsbetrieb():
 					stamp3 = time.time()
 					Gait(phi=90)
 					MoveIK(x,y,z,rotx,roty,rotz)
-				if command == "1" :#and servos.getMovingStatus(4) == 0):
-					break
-				if command == "L" :#and servos.getMovingStatus(4) == 0):
+				if(command == "1" ):#and servos.getMovingStatus(4) == 0):
+					break;
+				if(command == "L" ):#and servos.getMovingStatus(4) == 0):
 					oldCommand = "N"
 					gegenstand = packen()
 					if gegenstand == 1:
@@ -114,13 +117,13 @@ def servoErrorTest():
 		y += 1
 	
 	for x in xrange(1,19):
-	 	print ("Fehleranzahl Servo" + str(x) + " = " + str(error[x]))
+	 	print "Fehleranzahl Servo " + str(x) + " = " + str(error[x])
 	
 def readAllPositions(times=1):
 	#Liest die Positionen aller Servos "times"-mal aus und gibt durschnittliche Zeit und Fehlersumme zurueck.
 	#(Dient hauptsaechlich der statistischen Auswertung von Fehlersumme und Befehlszeit)
-	i=1
-	j=0
+	i=1;
+	j=0;
 	k=0
 	o=0
 	isPositions = [None]*18
@@ -143,22 +146,22 @@ def readAllPositions(times=1):
 			
 			except:
 				j += 1
-				if isPositions[k-1] is None:
+				if isPositions[k-1] == None:
 					isPositions[k-1] = (-1)
 			i += 1
 		i=0
-	print ("Anzahl an Leseversuchen" + str(o))
-	print ("Fehler: " + str(j))
-	print ("Durschnittliche Zeit: " + str(sumup/o))
+	print "Anzahl an Leseversuchen" + str(o)
+	print "Fehler: " + str(j)
+	print "Durschnittliche Zeit: " + str(sumup/o)
 	return isPositions
 
 def ReadOnePosition(i=1):
 	#Liest die Position eines Servos und gibt sie aus.
 	try:
 		a = servos.readPosition(i)
-		print (a)
+		print a
 	except:
-		print ("ReadOnePosition: failed")
+		print "ReadOnePosition: failed"
 	
 
 def timeTillStopped(k):
@@ -173,14 +176,14 @@ def timeTillStopped(k):
 		roty = 0
 		rotz = 0
 
-		zeroGait()
+		zeroGait();
 		MoveIK(x,y,z,rotx,roty,rotz)
 		sleep(0.5)
 			
 		start = time.time()
 		Gait(phi=0)
 		MoveIK(x,y,z,rotx,roty,rotz)
-		isMoving = 1
+		isMoving = 1;
 		while True:
 			try:
 				isMoving = servos.readMovingStatus(k)
@@ -190,7 +193,7 @@ def timeTillStopped(k):
 			if  isMoving:
 				break
 		delta = time.time() - start
-		print ("Time till " +str(k)  + "Servo stopped: " + str(delta))
+		print "Time till " +str(k)  + "Servo stopped: " + str(delta)
 	
 
 def Handbetrieb():
@@ -200,7 +203,7 @@ def Handbetrieb():
 	stdscr = curses.initscr()
 	curses.cbreak()
 	stdscr.keypad(1)
-	stdscr.addstr(0,10, "\nQuit with b \n")
+	stdscr.addstr(0,10, "Quit with b")
 	stdscr.addstr('W A S D Q E UP DOWN LEFT RIGHT')
 	stdscr.refresh()
 	add = 3
@@ -251,7 +254,7 @@ def Handbetrieb():
 			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('z'):
 			rotz = rotz + add
-			MoveIK (x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('h'):
 			rotz = rotz - add
 			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
@@ -292,7 +295,7 @@ def Init2():
 	#Initialisierung der Basisfunktionen sowie Bewegung in Initialposition.
 	Init()
 	InitPosition()
-	print ("Init done.")
+	print "Init done."
 
 def InitPosition():
 	#Bewegung in Initialposition
@@ -309,8 +312,7 @@ def InitPosition():
 
 def turn(phi=0):
 	#Funktion für das Drehen des gesamten Hexapoden um einen vorgegebenen Winkel.
-	#direction=False - Rechtsrum
-	#TODO: Funktioniert bisher nur gut für große Winkel (>20°)
+	#TODO: Funktioniert bisher nur gut für große Winkel (>15°)
 	#Experimentell
 	#(40 = Testwert TravelLengthX/Z, 96 = Testwert cStepAmount, 250/93 = Faktor basierend auf Messung Schritte pro Grad)
 
@@ -326,7 +328,7 @@ def turn(phi=0):
 
 	turnStepAmount = np.round((abs(phi)*250)/93).astype("int") 
 
-	print (turnStepAmount)
+	print turnStepAmount
 	for i in xrange(0,turnStepAmount,1):
 		Gait(phi=0,move=False,turn=True, turnDirection=direction)
 		MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)

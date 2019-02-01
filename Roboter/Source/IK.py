@@ -1,6 +1,9 @@
 # coding: utf-8
-#Thassilo Bücker, Alexander Orzol, Frederick Mueller, Moritz Kolb
+#Thassilo Bücker, Alexander Orzol, Frederick Müller, Moritz Kolb
 #Campus Velbert/Heiligenhaus, Hochschule Bochum, 2016/2017
+#
+#Überarbeitet von Frederick Müller 
+#Campus Velbert/Heiligenhaus, Hochschule Bochum, 2018/2019
 
 #Enthaelt alle Basisfunktionen und die Inverse Kinematik des Hexapoden
 
